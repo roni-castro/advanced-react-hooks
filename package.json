@@ -18,6 +18,7 @@
     "@testing-library/user-event": "^12.1.8",
     "chalk": "^4.1.0",
     "codegen.macro": "^4.0.0",
+    "cross-env": "^7.0.2",
     "mq-polyfill": "^1.1.8",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
@@ -32,9 +33,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:coverage": "npm run test -- --watchAll=false",
-    "test:exercises": "npm run test -- testing.*exercises\\/ --onlyChanged",
+    "test": "cross-env DISABLE_NEW_JSX_TRANSFORM=true react-scripts test",
+    "test:coverage": "cross-env DISABLE_NEW_JSX_TRANSFORM=true npm run test -- --watchAll=false",
+    "test:exercises": "cross-env DISABLE_NEW_JSX_TRANSFORM=true npm run test -- testing.*exercises\\/ --onlyChanged",
     "setup": "node setup",
     "lint": "eslint .",
     "validate": "npm-run-all --parallel build test:coverage lint"
