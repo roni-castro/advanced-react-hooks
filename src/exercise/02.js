@@ -1,7 +1,7 @@
 // useCallback: custom hooks
 // http://localhost:3000/isolated/exercise/02.js
 
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   fetchPokemon,
   PokemonForm,
@@ -57,18 +57,20 @@ function useAsync(asyncCallback, initialState, dependencies) {
 }
 
 function PokemonInfo({pokemonName}) {
+  const asyncCallback = useCallback(() => {
+    if (!pokemonName) {
+      return
+    }
+    return fetchPokemon(pokemonName)
+  }, [pokemonName])
+
   const state = useAsync(
-    () => {
-      if (!pokemonName) {
-        return
-      }
-      return fetchPokemon(pokemonName)
-    },
+    asyncCallback,
     {status: pokemonName ? 'pending' : 'idle'},
     [pokemonName],
   )
 
-  const {data, status, error} = state
+  const {data: pokemon, status, error} = state
 
   if (status === 'idle' || !pokemonName) {
     return 'Submit a pokemon'
@@ -77,7 +79,7 @@ function PokemonInfo({pokemonName}) {
   } else if (status === 'rejected') {
     throw error
   } else if (status === 'resolved') {
-    return <PokemonDataView pokemon={data} />
+    return <PokemonDataView pokemon={pokemon} />
   }
 
   throw new Error('This should be impossible')
